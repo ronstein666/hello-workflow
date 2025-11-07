@@ -15,3 +15,4 @@ jobs:
           firebaseServiceAccount: ${{ secrets.firebaseServiceAccount }}
           channelId: live
           projectId: instagram-test-a9a21
+          entryPoint: "."
